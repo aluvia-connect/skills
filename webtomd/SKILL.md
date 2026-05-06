@@ -16,17 +16,53 @@ Mode is **auto-detected** in Step 2. User can override anytime by saying "use fa
 Copy and track progress:
 
 ```
-[ ] 1. Fetch raw HTML + JS-render check
-[ ] 2. Auto-detect mode
-[ ] 3. Detect and filter nav links
-[ ] 4. Ask user which pages to scrape
-[ ] 5. Convert and save each page
-[ ] 6. Print summary
+[ ] 1. Resolve proxy (if ALUVIA_API_KEY set)
+[ ] 2. Fetch raw HTML + JS-render check
+[ ] 3. Auto-detect mode
+[ ] 4. Detect and filter nav links
+[ ] 5. Ask user which pages to scrape
+[ ] 6. Convert and save each page
+[ ] 7. Print summary
 ```
 
 ---
 
-### 1. Fetch raw HTML
+### 1. Resolve proxy
+
+Check for `ALUVIA_API_KEY` in the environment:
+
+```python
+import os, urllib.request, json
+
+api_key = os.environ.get("ALUVIA_API_KEY")
+proxy_url = None
+
+if api_key:
+    req = urllib.request.Request(
+        "https://api.aluvia.io/v1/account/connections",
+        headers={"Authorization": f"Bearer {api_key}"}
+    )
+    with urllib.request.urlopen(req, timeout=10) as r:
+        data = json.loads(r.read())
+    connections = data.get("data", [])
+    if connections:
+        proxy_url = connections[0]["proxy_urls"]["url"]
+```
+
+If `proxy_url` is set, use it for all subsequent `urllib` requests via `ProxyHandler`:
+
+```python
+handlers = [urllib.request.ProxyHandler({"http": proxy_url, "https": proxy_url})] if proxy_url else []
+opener = urllib.request.build_opener(*handlers)
+```
+
+Use `opener.open(req)` instead of `urllib.request.urlopen()` for every fetch in Steps 2 and 6.
+
+If `ALUVIA_API_KEY` is not set or the call fails, proceed without proxy — do not error.
+
+---
+
+### 2. Fetch raw HTML
 
 Use `python3` + `urllib` with a browser User-Agent. Extract `<title>`, strip trailing `| site name`.
 
@@ -41,7 +77,7 @@ If user picks Jina, replace URL and use fast mode. Skip nav detection.
 
 ---
 
-### 2. Auto-detect mode
+### 3. Auto-detect mode
 
 Using the URL and raw HTML already fetched, pick the mode silently then inform the user:
 
@@ -59,7 +95,7 @@ Wait for reply. If Enter or no override, proceed.
 
 ---
 
-### 3. Nav links
+### 4. Nav links
 
 Try in order, stop at first hit. Links must be same-domain, non-anchor:
 1. Inside `<nav>` or `<aside>`
@@ -70,7 +106,7 @@ Filter out: login, signup, home, about, contact, changelog, status, tags, extern
 
 ---
 
-### 4. Ask user
+### 5. Ask user
 
 If nav links found:
 ```
@@ -83,7 +119,7 @@ If "all" and N > 10: confirm — "That's N pages with ~1s delays between each. P
 
 ---
 
-### 5. Convert and save
+### 6. Convert and save
 
 For each URL — check if file exists first:
 > "⚠️ `./scraped/file.md` exists. Overwrite? (yes / no / skip)"
@@ -97,7 +133,7 @@ If result < 500 chars or has no headings and no lists, suggest:
 > "⚠️ Fast mode returned thin content. Retry with precise? (yes / no)"
 
 **precise mode:**
-Reuse HTML from step 1 for the main URL. For nav pages, fetch fresh with `urllib`.
+Reuse HTML from step 2 for the main URL. For nav pages, fetch fresh using `opener` (with proxy if set).
 - Check `markdownify`: `python3 -c "import markdownify" 2>/dev/null || pip install markdownify -q --break-system-packages`
 - Strip `<script>`, `<style>`, `<nav>`, `<footer>`, `<header>`, `<aside>`
 - Isolate content: `<main>` → `<article>` → element with class/id `content|docs|prose` → largest `<div>` → `<body>`
@@ -120,7 +156,7 @@ mode: fast | precise
 
 ---
 
-### 6. Summary
+### 7. Summary
 
 ```
 Done. Saved N file(s) [mode: fast|precise]:
@@ -133,3 +169,4 @@ Done. Saved N file(s) [mode: fast|precise]:
 - WebFetch fails or empty → skip, report
 - markdownify install fails → regex tag-strip fallback, warn user
 - Non-200 or timeout → skip, report
+- Aluvia API unreachable or returns no connections → proceed without proxy, warn user
