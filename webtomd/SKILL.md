@@ -97,12 +97,15 @@ Wait for reply. If Enter or no override, proceed.
 
 ### 4. Nav links
 
-Try in order, stop at first hit. Links must be same-domain, non-anchor:
-1. Inside `<nav>` or `<aside>`
-2. Elements with class/id containing `sidebar`, `toc`, `menu`, `nav`
-3. None found → scrape main URL only
+Use the raw HTML already fetched in Step 2 — do not re-fetch the URL.
 
-Filter out: login, signup, home, about, contact, changelog, status, tags, external domains.
+Scan the HTML and identify all navigation and sidebar links that look like documentation or content pages. Extract ALL matching `(title, url)` pairs — do not truncate or summarize.
+
+- Normalize relative URLs: if a URL starts with `/`, prepend the base domain (e.g. `/docs/guide` → `https://example.com/docs/guide`)
+- Exclude: login, signup, home, about, contact, changelog, status, tags, and any external domains
+- Only include same-domain, non-anchor links
+
+If no links are found → scrape main URL only.
 
 ---
 
