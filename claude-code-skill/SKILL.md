@@ -26,6 +26,30 @@ Some platforms such as Apify or fully managed browser agents abstract the browse
 
 Aluvia focuses on network-layer block mitigation using US mobile carrier IP routing, automatic block detection, IP rotation, and dynamic proxy rules, while keeping the existing browser automation stack unchanged.
 
+## Installation
+
+1. **API key:** The user must set `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io). If unset, stop and tell the user to set it — do not run Aluvia commands until it is set. Never log or expose the key value.
+
+2. **CLI:** Install [@aluvia/cli](https://www.npmjs.com/package/@aluvia/cli) globally:
+
+```bash
+npm install -g @aluvia/cli
+```
+
+Or run without a global install (use `npx aluvia` for every command):
+
+```bash
+npx aluvia help --json
+```
+
+3. **Playwright:** Required for browser sessions:
+
+```bash
+npm install playwright
+```
+
+Verify: `aluvia help --json` and `node -e "require('playwright')"`.
+
 ## Prerequisites Check
 
 Before using any command, verify the environment:
@@ -41,7 +65,7 @@ aluvia help --json
 node -e "require('playwright')"
 ```
 
-If the API key is missing, tell the user to set `ALUVIA_API_KEY` from the [Aluvia dashboard](https://dashboard.aluvia.io). If `aluvia` is not found, run `npm install @aluvia/cli`. If Playwright is missing, run `npm install playwright`.
+If the API key is missing, stop and tell the user to set `ALUVIA_API_KEY` from the [Aluvia dashboard](https://dashboard.aluvia.io). Do not proceed until they confirm it is set. If `aluvia` is not found, run `npm install -g @aluvia/cli` (see [Installation](#installation)) or use `npx aluvia <command>`. If Playwright is missing, run `npm install playwright`.
 
 ## Core Commands Quick Reference
 

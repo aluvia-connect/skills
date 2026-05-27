@@ -36,15 +36,27 @@ Aluvia's proxies + Playwright + Chrome stack: detects website blocks and routes 
 
 ## Installation
 
+1. **API key:** The user must set `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io). If unset, stop and tell the user to set it — do not run Aluvia commands until it is set. Never log or expose the key value.
+
+2. **CLI:** Install [@aluvia/cli](https://www.npmjs.com/package/@aluvia/cli) globally:
+
 ```bash
 npm install -g @aluvia/cli
 ```
 
-Or use directly with npx (no install needed):
+Or run without a global install (use `npx aluvia` for every command):
 
 ```bash
-npx aluvia help
+npx aluvia help --json
 ```
+
+3. **Playwright:** Required for browser sessions:
+
+```bash
+npm install playwright
+```
+
+Verify: `aluvia help --json` and `node -e "require('playwright')"`.
 
 ## CLI Interface
 
@@ -69,7 +81,7 @@ aluvia help --json
 node -e "require('playwright')"
 ```
 
-If the API key is missing, direct the user to create one at the [Aluvia dashboard](https://dashboard.aluvia.io) and set `ALUVIA_API_KEY`. If `aluvia` is not found, run `npm install @aluvia/mcp`. If Playwright is missing, run `npm install playwright`.
+If the API key is missing, stop and tell the user to set `ALUVIA_API_KEY` from the [Aluvia dashboard](https://dashboard.aluvia.io). Do not proceed until they confirm it is set. If `aluvia` is not found, run `npm install -g @aluvia/cli` (see [Installation](#installation)) or use `npx aluvia <command>`. If Playwright is missing, run `npm install playwright`.
 
 ## Core Commands Quick Reference
 

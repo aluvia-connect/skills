@@ -14,12 +14,12 @@ No application code or `package.json` in this repo — it's documentation and `S
 | `docs/`                 | Aluvia CLI reference: command reference, workflows, troubleshooting.                    |
 | `docs/integrations/`    | Tool-specific guides: OpenClaw browser, agent-browser (CDP connection).                 |
 
-All three skills cover the same core: prerequisites, commands, standard workflow (start → monitor → rotate IP → close), and safety constraints. OpenClaw’s skill adds installation, feature list, and links to the reference docs.
+All three skills cover the same core: installation, prerequisites, commands, standard workflow (start → monitor → rotate IP → close), and safety constraints. OpenClaw’s skill adds a feature list and integration links.
 
 ## Prerequisites (for any agent using these skills)
 
-- **API key:** `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io).
-- **CLI:** `npm install -g @aluvia/sdk` (or `npx aluvia`).
+- **API key:** `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io). If unset, the agent should stop and ask the user to set it before running Aluvia commands.
+- **CLI:** [`npm install -g @aluvia/cli`](https://www.npmjs.com/package/@aluvia/cli) (or `npx aluvia <command>` without a global install).
 - **Playwright:** `npm install playwright` (required for browser sessions).
 
 ## Using the skills
