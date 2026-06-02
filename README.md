@@ -1,47 +1,64 @@
-# Aluvia Skill
+# Aluvia Skills
 
-Agent skills that teach AI agents to unblock web requests using [Aluvia](https://aluvia.io) mobile carrier proxies. Format follows the [Agent Skills](https://agentskills.io) standard for use in any compatible tool. When an agent hits 403, Cloudflare, CAPTCHAs, 429s, or IP bans, these skills guide it to route traffic through real US mobile carrier IPs (AT&T, T-Mobile, Verizon) via the Aluvia CLI.
+[![skills.sh](https://skills.sh/b/aluvia-connect/skills)](https://skills.sh/aluvia-connect/skills)
 
-No application code or `package.json` in this repo — it's documentation and `SKILL.md` definitions only.
+Agent skills for [Aluvia](https://aluvia.io) and related workflows. Format follows the [Agent Skills](https://agentskills.io) standard for Cursor, Claude Code, OpenClaw, and other compatible hosts.
+
+No application code or `package.json` in this repo — documentation and `SKILL.md` files only.
 
 ## What's in this repo
 
-| Directory                    | Purpose                                                                                                               |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `cursor-skill/`              | Cursor IDE skill — when to use Aluvia and how to run the CLI.                                                         |
-| `claude-code-skill/`         | Claude Code skill; same content, scoped to `Bash(aluvia *)`.                                                          |
-| `openclaw-skill/` | OpenClaw skill with metadata (`bins`, `env`); links to docs and integrations. |
-| `docs/`                 | Aluvia CLI reference: command reference, workflows, troubleshooting.                    |
-| `docs/integrations/`    | Tool-specific guides: OpenClaw browser, agent-browser (CDP connection).                 |
+| Path                 | Purpose                                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------------------- |
+| `aluvia/`            | Unblock web requests via mobile carrier proxies — CLI sessions, CDP, block bypass               |
+| `webtomd/`           | Scrape URLs to clean Markdown (fast or precise); uses Aluvia proxy when `ALUVIA_API_KEY` is set |
+| `docs/`              | Aluvia CLI reference: command reference, workflows, troubleshooting                             |
+| `docs/integrations/` | Tool-specific guides: OpenClaw browser, agent-browser (CDP connection)                          |
 
-All three skills cover the same core: installation, prerequisites, commands, standard workflow (start → monitor → rotate IP → close), and safety constraints. OpenClaw’s skill adds a feature list and integration links.
-
-## Prerequisites (for any agent using these skills)
+## Prerequisites (for any agent using this skill)
 
 - **API key:** `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io). If unset, the agent should stop and ask the user to set it before running Aluvia commands.
 - **CLI:** [`npm install -g @aluvia/cli`](https://www.npmjs.com/package/@aluvia/cli) (or `npx aluvia <command>` without a global install).
 - **Playwright:** `npm install playwright` (required for browser sessions).
 
-## Using the skills
+## Installing skills
 
-- **Cursor:** Put the `cursor-skill/` folder (containing `SKILL.md`) in `.cursor/skills/` or your project’s skill path. See [Cursor Agent Skills](https://cursor.com/docs/context/skills).
-- **Claude Code:** Put `claude-code-skill/` in `~/.claude/skills/` or `.claude/skills/`. See [Extend Claude with skills](https://code.claude.com/docs/en/skills).
-- **OpenClaw:** Put `openclaw-skill/` in `~/.openclaw/skills` or `<workspace>/skills`. See [OpenClaw Skills](https://docs.openclaw.ai/tools/skills).
+Use the [skills CLI](https://www.skills.sh/docs/cli) ([`skills` on npm](https://www.npmjs.com/package/skills)). No global install required — `npx` is enough. The CLI detects your agent, symlinks skills into the right directory, and supports [50+ agents](https://www.npmjs.com/package/skills#supported-agents) (Cursor, Claude Code, OpenClaw, Codex, and others).
 
-## Reference docs
+**Install both skills** (recommended):
 
-- **Aluvia CLI:** [command-reference.md](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/command-reference.md), [workflows.md](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/workflows.md), [troubleshooting.md](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/troubleshooting.md).
-- **Integrations:** [OpenClaw browser](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/integrations/openclaw-browser.md), [agent-browser](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/integrations/agent-browser.md).
+```bash
+npx skills add aluvia-connect/skills
+```
 
-## Quick command reference
+**Install one skill:**
 
-| Command                                                              | Purpose                           |
-| -------------------------------------------------------------------- | --------------------------------- |
-| `aluvia session start <url> --auto-unblock --browser-session <name>` | Start headless browser session.   |
-| `aluvia session get --browser-session <name>`                        | Session details and block status. |
-| `aluvia session rotate-ip --browser-session <name>`                  | New upstream IP.                  |
-| `aluvia session close --browser-session <name>`                      | **Always** close when done.       |
-| `aluvia account`                                                     | Account info and balance.         |
-| `aluvia geos`                                                        | Available geo regions.            |
+```bash
+npx skills add aluvia-connect/skills --skill aluvia
+npx skills add aluvia-connect/skills --skill webtomd
+```
 
-Sessions must be explicitly closed; the skills instruct agents to run `session close` (or `session close --all`) on success or failure.
+**Common options:**
+
+```bash
+# List skills in this repo without installing
+npx skills add aluvia-connect/skills --list
+
+# Install globally (all projects on this machine)
+npx skills add aluvia-connect/skills -g
+
+# Target specific agents
+npx skills add aluvia-connect/skills -a cursor -a claude-code -a openclaw
+
+# Non-interactive (CI / scripts)
+npx skills add aluvia-connect/skills -g -y
+```
+
+**From a local clone** (while developing this repo):
+
+```bash
+npx skills add ./
+npx skills add ./ --skill aluvia
+```
+
+After install, use `npx skills list`, `npx skills update`, or `npx skills remove` to manage skills. See the [CLI reference](https://www.skills.sh/docs/cli) for full options.

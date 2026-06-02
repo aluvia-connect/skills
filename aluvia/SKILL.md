@@ -1,9 +1,19 @@
 ---
 name: aluvia
-description: "Unblock web requests using Aluvia mobile carrier proxies. Use when hitting 403 Forbidden, Cloudflare challenges, CAPTCHAs, rate limits (429), IP bans, WAF blocks, empty responses, or when websites detect and block automated traffic. Routes traffic through real US mobile carrier IPs (AT&T, T-Mobile, Verizon) so websites treat your agent like a human."
+description: "Stop AI agents from getting blocked on the web. Routes traffic through real US mobile carrier IPs (AT&T, T-Mobile, Verizon) so sites treat automation like a human. Bypasses Cloudflare, DataDome, PerimeterX, Akamai, and similar anti-bot systems. Use when hitting 403 Forbidden, Cloudflare challenges, CAPTCHAs, rate limits (429), IP bans, WAF blocks, empty responses, or when websites detect and block automated traffic. JSON-first CLI with auto block detection, IP rotation, US geo-targeting, dynamic proxy rules, and headless Chromium via Playwright/CDP."
+allowed-tools: Bash(aluvia *)
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["aluvia"], "env": ["ALUVIA_API_KEY"] },
+        "primaryEnv": "ALUVIA_API_KEY",
+        "emoji": "🌐",
+      },
+  }
 ---
 
-# Aluvia Proxy: Unblock Web Requests with Mobile Carrier Proxies
+# Aluvia: Unblock Web Requests with Mobile Carrier Proxies
 
 ## The Problem
 
@@ -49,6 +59,14 @@ npm install playwright
 
 Verify: `aluvia help --json` and `node -e "require('playwright')"`.
 
+## CLI Interface
+
+- Every command outputs a single JSON object to stdout. Parse it with your JSON tool.
+- Exit code `0` = success, `1` = error. Errors return `{"error": "message"}`.
+- The CLI manages long-running browser daemons — start a session, interact via CDP or a compatible tool, close when done.
+- Block detection scores pages 0.0–1.0: `blocked` >= 0.7, `suspected` >= 0.4, `clear` < 0.4.
+- `--auto-unblock` handles most blocks automatically by adding hostnames to proxy rules and reloading.
+
 ## Prerequisites Check
 
 Before using any command, verify the environment:
@@ -80,6 +98,7 @@ If the API key is missing, stop and tell the user to set `ALUVIA_API_KEY` from t
 | `account`                   | Show account info and balance        | `aluvia account`                                                                    |
 | `account usage`             | Show bandwidth usage stats           | `aluvia account usage`                                                              |
 | `geos`                      | List available geo-targeting regions | `aluvia geos`                                                                       |
+| `help`                      | Show help (`--json` for structured)  | `aluvia help --json`                                                                |
 
 ## Standard Workflow
 
@@ -115,8 +134,8 @@ This is the Chrome DevTools Protocol (CDP) endpoint for the active browser sessi
 `cdpUrl` is **NOT a website URL**.
 Do not navigate to it.
 
-- Check available tools for a CDP-compatible client (a Playwright or Puppeteer client that supports attaching to an existing CDP endpoint).
-- If available, attach the tool to the browser using `cdpUrl`. Only use tools that support CDP attach; skip tools that launch a new browser.
+- Check available tools for a CDP-compatible client (Playwright, Puppeteer, OpenClaw browser, agent-browser, or other CDP attach clients).
+- If available, attach using `cdpUrl`. Only use tools that support CDP attach; skip tools that launch a new browser.
 - Reuse the existing browser context and page.
 - If no CDP-compatible tool is available, connect programmatically using Playwright:
 
@@ -127,6 +146,11 @@ const browser = await chromium.connectOverCDP(cdpUrl);
 const context = browser.contexts()[0];
 const page = context.pages()[0];
 ```
+
+**Platform integrations** (step-by-step in linked docs):
+
+- **OpenClaw browser tool:** Create a remote CDP profile with this session's `cdpUrl`. See [OpenClaw browser integration](https://github.com/aluvia-connect/skills/blob/main/docs/integrations/openclaw-browser.md).
+- **agent-browser:** Pass `cdpUrl` via `--cdp`. See [agent-browser integration](https://github.com/aluvia-connect/skills/blob/main/docs/integrations/agent-browser.md).
 
 ### 3. Monitor for blocks
 
@@ -185,6 +209,8 @@ aluvia session close --browser-session my-task
 
 For detailed command specs, workflows, and troubleshooting:
 
-- **Command reference:** [docs/command-reference.md](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/command-reference.md) — every flag, output schema, and error for all commands
-- **Workflow recipes:** [docs/workflows.md](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/workflows.md) — step-by-step patterns for common scenarios
-- **Troubleshooting:** [docs/troubleshooting.md](https://github.com/aluvia-connect/aluvia-skills/blob/main/docs/troubleshooting.md) — error messages, block score interpretation, recovery steps
+- **Command reference:** [docs/command-reference.md](https://github.com/aluvia-connect/skills/blob/main/docs/command-reference.md) — every flag, output schema, and error for all commands
+- **Workflow recipes:** [docs/workflows.md](https://github.com/aluvia-connect/skills/blob/main/docs/workflows.md) — step-by-step patterns for common scenarios
+- **Troubleshooting:** [docs/troubleshooting.md](https://github.com/aluvia-connect/skills/blob/main/docs/troubleshooting.md) — error messages, block score interpretation, recovery steps
+- **agent-browser integration:** [docs/integrations/agent-browser.md](https://github.com/aluvia-connect/skills/blob/main/docs/integrations/agent-browser.md)
+- **OpenClaw browser integration:** [docs/integrations/openclaw-browser.md](https://github.com/aluvia-connect/skills/blob/main/docs/integrations/openclaw-browser.md)
