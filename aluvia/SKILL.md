@@ -6,7 +6,7 @@ metadata:
   {
     "openclaw":
       {
-        "requires": { "bins": ["aluvia"], "env": ["ALUVIA_API_KEY"] },
+        "requires": { "bins": ["aluvia"] },
         "primaryEnv": "ALUVIA_API_KEY",
         "emoji": "🌐",
       },
@@ -37,9 +37,7 @@ Aluvia focuses on network-layer block mitigation using US mobile carrier IP rout
 
 ## Installation
 
-1. **API key:** The user must set `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io). If unset, stop and tell the user to set it — do not run Aluvia commands until it is set. Never log or expose the key value.
-
-2. **CLI:** Install [@aluvia/cli](https://www.npmjs.com/package/@aluvia/cli) globally:
+1. **CLI:** Install [@aluvia/cli](https://www.npmjs.com/package/@aluvia/cli) globally:
 
 ```bash
 npm install -g @aluvia/cli
@@ -50,6 +48,18 @@ Or run without a global install (use `npx aluvia` for every command):
 ```bash
 npx aluvia help --json
 ```
+
+2. **Authentication:** Run `aluvia auth`. The CLI prints a link and a short verification code:
+
+```bash
+aluvia auth
+#   1. Open: https://dashboard.aluvia.io/cli-auth?cli_code=...
+#   2. Confirm this code matches: ABCD-1234
+```
+
+The user opens that link in **any** browser (same machine or not — phone, laptop, anywhere), signs in if needed, confirms the code matches, and clicks Authorize. The CLI polls in the background and, once approved, stores the API key in `~/.aluvia/config.json`. There is no browser auto-launch and no extra flags — this single flow works on desktops, headless servers, SSH, and containers alike.
+
+Alternatively, set `ALUVIA_API_KEY` from [dashboard.aluvia.io](https://dashboard.aluvia.io) (useful for CI; the env var takes precedence over a stored key). Never log or expose the key value.
 
 3. **Playwright:** Required for browser sessions:
 
@@ -72,17 +82,17 @@ Verify: `aluvia help --json` and `node -e "require('playwright')"`.
 Before using any command, verify the environment:
 
 ```bash
-# 1. Check API key is set (never log the full value)
-echo "${ALUVIA_API_KEY:0:8}..."
-
-# 2. Verify the CLI binary is available
+# 1. Verify the CLI binary is available
 aluvia help --json
+
+# 2. Check authentication (never prints the key value)
+aluvia auth status
 
 # 3. Verify Playwright is installed (required for browser sessions)
 node -e "require('playwright')"
 ```
 
-If the API key is missing, stop and tell the user to set `ALUVIA_API_KEY` from the [Aluvia dashboard](https://dashboard.aluvia.io). Do not proceed until they confirm it is set. If `aluvia` is not found, run `npm install -g @aluvia/cli` (see [Installation](#installation)) or use `npx aluvia <command>`. If Playwright is missing, run `npm install playwright`.
+If `aluvia auth status` reports `{"authenticated": false}`, run `aluvia auth` so the user can authorize via the browser (open the printed link in any browser, confirm the code, Authorize), or tell the user to set `ALUVIA_API_KEY` from the [Aluvia dashboard](https://dashboard.aluvia.io). Do not proceed until authenticated. If `aluvia` is not found, run `npm install -g @aluvia/cli` (see [Installation](#installation)) or use `npx aluvia <command>`. If Playwright is missing, run `npm install playwright`.
 
 ## Core Commands Quick Reference
 
@@ -98,6 +108,9 @@ If the API key is missing, stop and tell the user to set `ALUVIA_API_KEY` from t
 | `account`                   | Show account info and balance        | `aluvia account`                                                                    |
 | `account usage`             | Show bandwidth usage stats           | `aluvia account usage`                                                              |
 | `geos`                      | List available geo-targeting regions | `aluvia geos`                                                                       |
+| `auth`                      | Authorize via browser, store API key | `aluvia auth`                                                                       |
+| `auth status`               | Check auth (never prints the key)    | `aluvia auth status`                                                                |
+| `auth logout`               | Remove the stored API key            | `aluvia auth logout`                                                                |
 | `help`                      | Show help (`--json` for structured)  | `aluvia help --json`                                                                |
 
 ## Standard Workflow
@@ -195,7 +208,7 @@ aluvia session close --browser-session my-task
 ## Safety Constraints
 
 1. **Always close sessions.** When your task finishes — success or failure — run `session close`. If uncertain whether a session exists, run `session list` first.
-2. **Never expose the API key.** Reference `ALUVIA_API_KEY` by name only. Never log, print, or include its value in output.
+2. **Never expose the API key.** Reference `ALUVIA_API_KEY` by name only. Never log, print, or include its value in output. Use `aluvia auth status` to check authentication — it never reveals the key.
 3. **Check balance before expensive operations.** Run `aluvia account` and inspect `balance_gb` before long scraping tasks.
 4. **Limit IP rotation retries to 3.** If rotating IP three times doesn't resolve a block, stop and report the issue — the site may use fingerprinting beyond IP.
 5. **Prefer `--auto-unblock`.** Let the SDK handle block detection and remediation automatically.
