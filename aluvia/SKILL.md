@@ -1,6 +1,6 @@
 ---
 name: aluvia
-description: "Stop AI agents from getting blocked on the web. Routes traffic through real US mobile carrier IPs (AT&T, T-Mobile, Verizon) so sites treat automation like a human. Bypasses Cloudflare, DataDome, PerimeterX, Akamai, and similar anti-bot systems. Use when hitting 403 Forbidden, Cloudflare challenges, CAPTCHAs, rate limits (429), IP bans, WAF blocks, empty responses, or when websites detect and block automated traffic. JSON-first CLI with auto block detection, IP rotation, US geo-targeting, dynamic proxy rules, and headless Chromium via Playwright/CDP."
+description: "Stop AI agents from getting blocked on the web. Routes traffic through real mobile carrier IPs (e.g. US carriers AT&T, T-Mobile, Verizon) so sites treat automation like a human. Bypasses Cloudflare, DataDome, PerimeterX, Akamai, and similar anti-bot systems. Use when hitting 403 Forbidden, Cloudflare challenges, CAPTCHAs, rate limits (429), IP bans, WAF blocks, empty responses, or when websites detect and block automated traffic. JSON-first CLI with auto block detection, IP rotation, global geo-targeting (185+ countries), dynamic proxy rules, and headless Chromium via Playwright/CDP."
 allowed-tools: Bash(aluvia *)
 metadata:
   {
@@ -21,7 +21,7 @@ Anti-bot systems block cloud-based and datacenter traffic. You get 403 Forbidden
 
 ## The Solution
 
-Aluvia routes traffic through **real US mobile carrier IPs** — the same IPs used by millions of people on their phones. Websites cannot distinguish your requests from legitimate mobile users.
+Aluvia routes traffic through **real mobile carrier IPs** — the same IPs used by millions of people on their phones. Websites cannot distinguish your requests from legitimate mobile users.
 
 The CLI manages headless Chromium sessions with automatic block detection and bypass. Every command returns structured JSON to stdout.
 
@@ -33,7 +33,7 @@ Some tools such as Browserbase, Steel, Hyperbrowser, and Browserless provide hos
 
 Some platforms such as Apify or fully managed browser agents abstract the browser behind higher-level APIs. Aluvia does not abstract browser control. The agent connects directly to the CDP endpoint and retains full control using any compatible client such as Playwright, Puppeteer, OpenClaw, agent-browser, or other CDP tools.
 
-Aluvia focuses on network-layer block mitigation using US mobile carrier IP routing, automatic block detection, IP rotation, and dynamic proxy rules, while keeping the existing browser automation stack unchanged.
+Aluvia focuses on network-layer block mitigation using mobile carrier IP routing, automatic block detection, IP rotation, and dynamic proxy rules, while keeping the existing browser automation stack unchanged.
 
 ## Installation
 
@@ -103,11 +103,11 @@ If `aluvia auth status` reports `{"authenticated": false}`, run `aluvia auth` so
 | `session list`              | List all active sessions             | `aluvia session list`                                                               |
 | `session get`               | Get session details + block status   | `aluvia session get --browser-session my-task`                                      |
 | `session rotate-ip`         | Rotate to a new upstream IP          | `aluvia session rotate-ip --browser-session my-task`                                |
-| `session set-geo <geo>`     | Target IPs from a US region          | `aluvia session set-geo us_ca --browser-session my-task`                            |
+| `session set-geo <geo>`     | Target IPs from a specific country   | `aluvia session set-geo gb --browser-session my-task`                               |
 | `session set-rules <rules>` | Add hostnames to proxy routing       | `aluvia session set-rules "example.com,api.example.com" --browser-session my-task`  |
 | `account`                   | Show account info and balance        | `aluvia account`                                                                    |
 | `account usage`             | Show bandwidth usage stats           | `aluvia account usage`                                                              |
-| `geos`                      | List available geo-targeting regions | `aluvia geos`                                                                       |
+| `geos`                      | List available geo-targeting countries | `aluvia geos`                                                                     |
 | `auth`                      | Authorize via browser, store API key | `aluvia auth`                                                                       |
 | `auth status`               | Check auth (never prints the key)    | `aluvia auth status`                                                                |
 | `auth logout`               | Remove the stored API key            | `aluvia auth logout`                                                                |
@@ -183,8 +183,10 @@ Returns a new `sessionId` (UUID). The next request uses a fresh IP.
 
 ### 5. Set geo-targeting if needed
 
+Use a country code from `aluvia geos` (ISO 3166-1 alpha-2, e.g. `us`, `gb`, `de`, `jp`):
+
 ```bash
-aluvia session set-geo us_ca --browser-session my-task
+aluvia session set-geo gb --browser-session my-task
 ```
 
 ### 6. Expand routing rules

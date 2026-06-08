@@ -299,7 +299,7 @@ Auto-selects if only one session is running.
     "proxy_password": "pass456",
     "rules": ["example.com"],
     "session_id": "abc-123",
-    "target_geo": "us_ca"
+    "target_geo": "us"
   }
 }
 ```
@@ -372,7 +372,7 @@ aluvia session set-geo <geo> [--browser-session <name>]
 aluvia session set-geo --clear [--browser-session <name>]
 ```
 
-Either `<geo>` or `--clear` must be provided.
+Either `<geo>` or `--clear` must be provided. `<geo>` is an ISO 3166-1 alpha-2 country code (e.g. `us`, `gb`, `de`, `jp`) — run `aluvia geos` for the full list of supported countries.
 
 ### Output
 
@@ -382,7 +382,7 @@ Either `<geo>` or `--clear` must be provided.
 {
   "browserSession": "my-task",
   "connectionId": 3449,
-  "targetGeo": "us_ca"
+  "targetGeo": "gb"
 }
 ```
 
@@ -413,8 +413,8 @@ Either `<geo>` or `--clear` must be provided.
 ### Examples
 
 ```bash
-aluvia session set-geo US --browser-session my-task
-aluvia session set-geo us_ca --browser-session my-task
+aluvia session set-geo us --browser-session my-task
+aluvia session set-geo gb --browser-session my-task
 aluvia session set-geo --clear --browser-session my-task
 ```
 
@@ -578,15 +578,16 @@ aluvia geos
 ```json
 {
   "geos": [
-    { "code": "us", "label": "United States (any)" },
-    { "code": "us_ny", "label": "United States - New York" },
-    { "code": "us_ca", "label": "United States - California" }
+    { "code": "us", "label": "United States" },
+    { "code": "gb", "label": "United Kingdom" },
+    { "code": "de", "label": "Germany" },
+    { "code": "jp", "label": "Japan" }
   ],
-  "count": 3
+  "count": 185
 }
 ```
 
-Use the `code` field with `session set-geo`.
+Geos are ISO 3166-1 alpha-2 country codes. Use the `code` field with `session set-geo`. The full list (185+ countries) is returned live by this command.
 
 ---
 
