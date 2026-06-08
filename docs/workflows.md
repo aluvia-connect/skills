@@ -76,12 +76,12 @@ aluvia session rotate-ip --browser-session recovery-task
 # Agent reloads the page and checks again...
 
 # Step 2: If still blocked after 3 rotations, try geo-targeting
-aluvia session set-geo us_ca --browser-session recovery-task
+aluvia session set-geo us --browser-session recovery-task
 aluvia session rotate-ip --browser-session recovery-task
 # Agent reloads and checks...
 
 # Step 3: Try a different geo
-aluvia session set-geo us_ny --browser-session recovery-task
+aluvia session set-geo gb --browser-session recovery-task
 aluvia session rotate-ip --browser-session recovery-task
 
 # Step 4: If still blocked after all attempts, report failure
@@ -102,31 +102,31 @@ aluvia session close --browser-session recovery-task
 
 ## 4. Geo-Targeted Data Collection
 
-Collect region-specific content by targeting IPs from different US states.
+Collect region-specific content by targeting IPs from different countries.
 
 ```bash
-# List available geos
+# List available geos (ISO 3166-1 alpha-2 country codes, 185+ countries)
 aluvia geos
-# Output: {"geos":[{"code":"us","label":"United States (any)"},{"code":"us_ca","label":"United States - California"},{"code":"us_ny","label":"United States - New York"}...],"count":...}
+# Output: {"geos":[{"code":"us","label":"United States"},{"code":"gb","label":"United Kingdom"},{"code":"de","label":"Germany"},{"code":"jp","label":"Japan"}...],"count":185}
 
-# Start a session targeting California
+# Start a session targeting the United States
 aluvia session start https://store.example.com --auto-unblock --browser-session geo-task
-aluvia session set-geo us_ca --browser-session geo-task
-# Agent collects California-specific pricing...
+aluvia session set-geo us --browser-session geo-task
+# Agent collects US-specific pricing...
 
-# Switch to New York
-aluvia session set-geo us_ny --browser-session geo-task
+# Switch to the United Kingdom
+aluvia session set-geo gb --browser-session geo-task
 aluvia session rotate-ip --browser-session geo-task
-# Agent reloads and collects New York-specific pricing...
+# Agent reloads and collects UK-specific pricing...
 
-# Clear geo to go back to any US IP
+# Clear geo to go back to any IP
 aluvia session set-geo --clear --browser-session geo-task
 
 # Close when done
 aluvia session close --browser-session geo-task
 ```
 
-**When to use:** Price comparison, regional content audits, or verifying geo-restricted content.
+**When to use:** Price comparison, regional content audits, or verifying geo-restricted content across countries.
 
 ---
 
