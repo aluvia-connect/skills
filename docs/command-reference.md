@@ -1,3 +1,5 @@
+> Retired v1 CLI reference. Shipping Aluvia: `npx aluvia-cli setup`. Live docs: https://aluvia.io/docs
+
 # Aluvia CLI Command Reference
 
 Complete reference for every CLI command. All commands output JSON to stdout with exit code 0 (success) or 1 (error).

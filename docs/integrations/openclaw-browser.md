@@ -1,3 +1,5 @@
+> Retired v1 CLI reference. Shipping Aluvia: `npx aluvia-cli setup`. Live docs: https://aluvia.io/docs
+
 # OpenClaw Browser Tool Integration Reference
 
 Use the [OpenClaw browser tool](https://docs.openclaw.ai/tools/browser) with an Aluvia-backed browser by adding the Aluvia session's CDP URL as a **remote CDP profile**. The agent then uses that profile so all browser tool traffic goes through Aluvia's mobile proxy.

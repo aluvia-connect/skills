@@ -1,3 +1,5 @@
+> Retired v1 CLI reference. Shipping Aluvia: `npx aluvia-cli setup`. Live docs: https://aluvia.io/docs
+
 # Aluvia CLI Troubleshooting
 
 Error messages, block detection interpretation, signal reference, and recovery steps.
