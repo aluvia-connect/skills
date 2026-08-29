@@ -1,3 +1,5 @@
+> Retired v1 CLI reference. Shipping Aluvia: `npx aluvia-cli setup`. Live docs: https://aluvia.io/docs
+
 # agent-browser Integration Reference
 
 Use [agent-browser](https://www.npmjs.com/package/agent-browser) (Vercel Labs) to drive an Aluvia-backed browser by connecting via Chrome DevTools Protocol (CDP). All agent-browser traffic then goes through Aluvia's mobile proxy.
