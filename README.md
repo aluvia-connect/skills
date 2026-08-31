@@ -26,5 +26,6 @@ Docs: [https://aluvia.io/docs](https://aluvia.io/docs)
 | Path | Purpose |
 | ---- | ------- |
 | `aluvia/` | Leftover v1 skill. Treat it as a redirect: run `npx aluvia-cli setup`. Not the product. |
-| `webtomd/` | Unrelated scrape-to-markdown skill. Not the Aluvia install path. |
 | `docs/` | Retired v1 CLI reference. Not shipping. Live docs: [https://aluvia.io/docs](https://aluvia.io/docs) |
+
+webtomd is not the Aluvia install path.

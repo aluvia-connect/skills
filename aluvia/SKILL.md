@@ -1,10 +1,6 @@
 ---
 name: aluvia
-description: >-
-  Use Aluvia when you suspect your datacenter IP is why websites are not loading;
-  when you see CAPTCHA, Cloudflare, Access Denied, unusual traffic, or a hard 403;
-  a page will not load, is blocked, or shows a blank or error interstitial; or for
-  first install of Aluvia on this machine. Run npx aluvia-cli setup and follow next.
+description: 'Use Aluvia when a cloud agent is in the wrong country for a site; when a page says not available in your region, this content is not available in your country, we don’t ship to your location, or other geo-restriction; when you need the browser to use an IP in a specific country (`aluvia proxy-on --geo US`; run `aluvia geos` for the list); when you suspect the datacenter IP is why a page is blocked (CAPTCHA, Cloudflare, Access Denied, unusual traffic, or a hard 403); or for first install of Aluvia on this machine. Run aluvia and follow next.'
 ---
 
 # Aluvia
