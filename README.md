@@ -26,7 +26,13 @@ Docs: [https://aluvia.io/docs](https://aluvia.io/docs)
 | Path | Purpose |
 | ---- | ------- |
 | `aluvia/` | Geo-focused agent skill when the country is wrong. This repo is not the product; run `npx aluvia-cli setup`. |
-| `aluvia-cloud-vm-blocks/` | Agent skill when a cloud browser shows Cloudflare Verify you are human, a repeating CAPTCHA, Imperva Error 16, not available in your region, or a 403 on a public URL from a datacenter IP. This repo is not the product; run `npx aluvia-cli setup`. |
+| `aluvia-cloud-vm-blocks/` | Agent skill when a cloud browser shows Cloudflare Verify you are human, a repeating CAPTCHA, Imperva Error 16, not available in your region, or a 403 on a public URL from a datacenter IP. This repo is not the product; run `npx aluvia-cli setup`. Companion: [https://aluvia.io/resources/cloud-vm-blocks-skill](https://aluvia.io/resources/cloud-vm-blocks-skill). |
 | `docs/` | Retired v1 CLI reference. Not shipping. Live docs: [https://aluvia.io/docs](https://aluvia.io/docs) |
+
+Install the cloud VM blocks skill:
+
+```bash
+npx skills add aluvia-connect/skills --skill aluvia-cloud-vm-blocks
+```
 
 webtomd is not the Aluvia install path.
