@@ -26,6 +26,8 @@ Wrong prices, catalog, or language; or the page says not available in your regio
 
 Cloudflare, CAPTCHA, Access Denied, unusual traffic, or a hard 403 on a page that should load. Not a normal login wall. A residential IP in the right country sometimes clears the block. Fingerprint, TLS, and canvas stay the same.
 
+Read the on-screen string. For Cloudflare Verify you are human, a repeating CAPTCHA, Imperva Error 16, or a 403 on a public URL, follow `aluvia-cloud-vm-blocks`.
+
 1. Copy the address-bar URL.
 2. `aluvia status` if you already ran setup on this machine. Follow `next`. `what` explains every field.
 3. `{"code":"payment_required"}` always includes `claim_url` and `next` → show the human `claim_url`. Then `aluvia auth login` to wait. **Paid** below.
