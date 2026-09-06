@@ -25,7 +25,8 @@ Docs: [https://aluvia.io/docs](https://aluvia.io/docs)
 
 | Path | Purpose |
 | ---- | ------- |
-| `aluvia/` | Leftover v1 skill. Treat it as a redirect: run `npx aluvia-cli setup`. Not the product. |
+| `aluvia/` | Geo-focused agent skill when the country is wrong. This repo is not the product; run `npx aluvia-cli setup`. |
+| `aluvia-cloud-vm-blocks/` | Agent skill when a cloud browser shows Cloudflare Verify you are human, a repeating CAPTCHA, Imperva Error 16, not available in your region, or a 403 on a public URL from a datacenter IP. This repo is not the product; run `npx aluvia-cli setup`. |
 | `docs/` | Retired v1 CLI reference. Not shipping. Live docs: [https://aluvia.io/docs](https://aluvia.io/docs) |
 
 webtomd is not the Aluvia install path.
